@@ -10,36 +10,28 @@ namespace SmartSchool.API.Controllers
     [Route("api/[controller]")]
     public class ProfessorController : ControllerBase
     {
-        private readonly SmartContext _context;
-        public ProfessorController(SmartContext context)
+     
+        private readonly IRepository _repo;
+
+        public ProfessorController(IRepository repo)
         {
-            _context = context;
+            _repo = repo;
         }
 
         //api/professor
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_context.Professores);
+            var result = _repo.GetAllProfessores(true);
+            return Ok(result);
         }
 
-        //api/professor/byId/1
-        [HttpGet("byId/{id}")]
+        //api/professor/
+        [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var prof = _context.Professores.FirstOrDefault(p => p.Id == id);
-            if (prof == null) return BadRequest("Professor inexistente");
-
-            return Ok(prof);
-        }
-
-        //api/professor/byName?nome=NOME
-        [HttpGet("byName")]
-        public IActionResult GetByName(string nome)
-        {
-            var prof = _context.Professores.FirstOrDefault
-            (p => p.Nome.Contains(nome));
-            if (prof == null) return BadRequest("Professor inexistente");
+            var prof = _repo.GetProfessorById(id, false);
+            if (prof == null) return BadRequest("Professor não Localizado");
 
             return Ok(prof);
         }
@@ -48,46 +40,59 @@ namespace SmartSchool.API.Controllers
         [HttpPost]
         public IActionResult Post(Professor professor)
         {
-            _context.Add(professor);
-            _context.SaveChanges();
-            return Ok(professor);
+            _repo.Add(professor);
+            if (_repo.SaveChanges())
+            {
+                return Ok(professor);
+            }
+
+            return BadRequest("Professor não Cadastrado");
         }
 
         //api/professor/
         [HttpPut("{id}")]
         public IActionResult Put(int id, Professor professor)
         {
-            var prof = _context.Professores.AsNoTracking().FirstOrDefault(p => p.Id == id);
+            var prof = _repo.GetProfessorById(id, false);
             if (prof == null) return BadRequest("Professor não Localizado");
 
-            _context.Update(professor);
-            _context.SaveChanges();
-            return Ok(professor);
+            _repo.Update(professor);
+            if (_repo.SaveChanges())
+            {
+                return Ok(professor);
+            }
+            return BadRequest("Professor não Atualizado");
         }
 
         //api/professor/
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, Professor professor)
         {
-            var prof = _context.Professores.AsNoTracking().FirstOrDefault(p => p.Id == id);
+            var prof = _repo.GetProfessorById(id, false);
             if (prof == null) return BadRequest("Professor não Localizado");
 
-            _context.Update(professor);
-            _context.SaveChanges();
-            return Ok(professor);
+            _repo.Update(professor);
+            if (_repo.SaveChanges())
+            {
+                return Ok(professor);
+            }
+
+            return BadRequest("Professor não Atualizado");
         }
 
         //api/professor/
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var prof = _context.Professores.FirstOrDefault(p => p.Id == id);
-            if (prof == null) return BadRequest("Deletando Professor não Localizado");
+            var prof = _repo.GetProfessorById(id, false);
+            if (prof == null) return BadRequest("Professor não Localizado");
 
-            //Variavel Local PRO de (PROFESSOR)
-            _context.Remove(prof);
-            _context.SaveChanges();
-            return Ok();
+            _repo.Delete(prof);
+            if (_repo.SaveChanges())
+            {
+                return Ok("Professor Deletado");
+            }
+            return BadRequest("Professor não Deletado");
         }
     }
 }
