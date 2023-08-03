@@ -31,6 +31,13 @@ namespace SmartSchool.API.Controllers
             return Ok(_mapper.Map<IEnumerable<AlunoDto>>(alunos));
         }
 
+        //api/aluno/getRegister
+        [HttpGet("getRegister")]
+        public IActionResult getRegister()
+        {
+            return Ok(new AlunoDto());
+        }
+
         //api/aluno/
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
@@ -39,13 +46,12 @@ namespace SmartSchool.API.Controllers
             if (aluno == null) return BadRequest("Aluno não Localizado");
 
             var alunoDto = _mapper.Map<AlunoDto>(aluno);
-
             return Ok(alunoDto);
         }
 
         //api/aluno/
         [HttpPost]
-        public IActionResult Post(AlunoDto model)
+        public IActionResult Post(AlunoRegistrarDto model)
         {
             var aluno = _mapper.Map<Aluno>(model);
 
