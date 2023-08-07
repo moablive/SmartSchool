@@ -2,15 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartSchool.API.Data;
-using SmartSchool.API.Dtos;
+using SmartSchool.API.V1.Dtos;
 using SmartSchool.API.Models;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SmartSchool.API.Controllers
+namespace SmartSchool.API.V1.Controllers
 {
+    /// <summary>
+    /// V1 Professor Controller 
+    /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ProfessorController : ControllerBase
     {
      
@@ -34,18 +38,18 @@ namespace SmartSchool.API.Controllers
         [HttpGet("getRegister")]
         public IActionResult getRegister()
         {
-            return Ok(new ProfessorDto());
+            return Ok(new ProfessorRegistrarDto());
         }
 
         //api/professor/
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var profesor = _repo.GetProfessorById(id, false);
-            if (profesor == null) return BadRequest("Professor não Localizado");
+            var profesor = _repo.GetProfessorById(id, true);
+            if (profesor == null) return BadRequest("O Professor não Localizado");
 
             var ProfessorDto = _mapper.Map<ProfessorDto>(profesor);
-            return Ok(ProfessorDto);
+            return Ok(profesor);
         }
 
         //api/professor/
@@ -66,7 +70,7 @@ namespace SmartSchool.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, ProfessorDto model)
         {
-            var professor = _repo.GetProfessorById(id);
+            var professor = _repo.GetProfessorById(id, false);
             if (professor == null) return BadRequest("Professor não Localizado");
 
             _mapper.Map(model, professor);
@@ -83,7 +87,7 @@ namespace SmartSchool.API.Controllers
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, ProfessorDto model)
         {
-            var professor = _repo.GetProfessorById(id);
+            var professor = _repo.GetProfessorById(id, false);
             if (professor == null) return BadRequest("Professor não Localizado");
             
             _mapper.Map(model, professor);
@@ -101,10 +105,10 @@ namespace SmartSchool.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var prof = _repo.GetProfessorById(id, false);
-            if (prof == null) return BadRequest("Professor não Localizado");
+            var professor = _repo.GetProfessorById(id, false);
+            if (professor == null) return BadRequest("Professor não Localizado");
 
-            _repo.Delete(prof);
+            _repo.Delete(professor);
             if (_repo.SaveChanges())
             {
                 return Ok("Professor Deletado");

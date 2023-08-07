@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace SmartSchool.API.Dtos
+namespace SmartSchool.API.V2.Dtos
 {
     public class AlunoDto
     {
