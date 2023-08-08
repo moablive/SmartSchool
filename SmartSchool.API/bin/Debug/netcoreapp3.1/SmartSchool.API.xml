@@ -16,9 +16,10 @@
             <param name="repo"></param>
             <param name="mapper"></param>
         </member>
-        <member name="M:SmartSchool.API.V1.Controllers.AlunoController.Get">
+        <member name="M:SmartSchool.API.V1.Controllers.AlunoController.Get(SmartSchool.API.Helpers.PageParams)">
             <summary>
             Retornar Todos os Alunos
+            De Forma async
             </summary>
             <returns></returns>
         </member>

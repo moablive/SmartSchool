@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartSchool.API.Data;
+using SmartSchool.API.Helpers;
 using SmartSchool.API.V1.Dtos;
 using SmartSchool.API.Models;
-
 
 namespace SmartSchool.API.V1.Controllers
 {
@@ -35,13 +36,18 @@ namespace SmartSchool.API.V1.Controllers
 
         /// <summary>
         /// Retornar Todos os Alunos
+        /// De Forma async
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get([FromQuery]PageParams pageParams)
         {
-            var alunos = _repo.GetAllAlunos(true);
-            return Ok(_mapper.Map<IEnumerable<AlunoDto>>(alunos));
+            var alunos = await  _repo.GetAllAlunosAsync(pageParams,true);
+            var alunosResult = _mapper.Map<IEnumerable<AlunoDto>>(alunos);
+            
+            Response.AddPagination(alunos.CurrentPage, alunos.PageSize, alunos.TotalCount, alunos.TotalPages);
+
+            return Ok(alunosResult);
         }
 
         /// <summary>
