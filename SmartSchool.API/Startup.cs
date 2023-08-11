@@ -32,7 +32,7 @@ namespace SmartSchool.API
         {
             //DB 
             services.AddDbContext<SmartContext>(
-                context => context.UseSqlite(Configuration.GetConnectionString("Default"))
+                context => context.UseMySql(Configuration.GetConnectionString("MySqlConnection"))
                 );
        
             //Ajuste de LoopHandling
