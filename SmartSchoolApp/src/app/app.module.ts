@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 //Import Components
 import { AlunosComponent } from './components/alunos/alunos.component';
@@ -31,6 +32,7 @@ import { TituloComponent } from './components/shared/titulo/titulo.component';
     AppRoutingModule,
     NgxSpinnerModule,
     BrowserAnimationsModule,
+    BsDropdownModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 3500,
       positionClass: 'toastr-bottom-right',
